@@ -15,6 +15,8 @@ from bokeh.models import Legend
 
 from bokeh.layouts import row, column
 
+from copy import copy
+
 # Define the data
 # Define the data
 # data = {
@@ -112,9 +114,13 @@ p.add_layout(legend, 'right')
 
 
 # Define a callback function that updates the plot
-def update(attr, old, new):
+def update(attr, old, new, widget):
     # Update GenesToPlot
-    GenesToPlot[9] = new
+    
+    widget_name = widget.name
+    print(widget_name)
+
+    GenesToPlot[int(widget_name)] = new
     df_melted_plot = df_melted[df_melted.Gene.isin(GenesToPlot)]
     series_names = df_melted['Series'].unique().tolist()
 
@@ -149,7 +155,20 @@ def update(attr, old, new):
 
 
 #text_input.on_change("value", update)
-[TextInputList[i].on_change("value", update) for i in range(10)]
+#[TextInputList[i].on_change("value", lambda attr, old, new: update(attr, old, new, TextInputList[i])) for i in range(10)]
+TextInputList[0].on_change("value", lambda attr, old, new: update(attr, old, new, TextInputList[0]))
+TextInputList[1].on_change("value", lambda attr, old, new: update(attr, old, new, TextInputList[1]))
+TextInputList[2].on_change("value", lambda attr, old, new: update(attr, old, new, TextInputList[2]))
+TextInputList[3].on_change("value", lambda attr, old, new: update(attr, old, new, TextInputList[3]))
+TextInputList[4].on_change("value", lambda attr, old, new: update(attr, old, new, TextInputList[4]))
+TextInputList[5].on_change("value", lambda attr, old, new: update(attr, old, new, TextInputList[5]))
+TextInputList[6].on_change("value", lambda attr, old, new: update(attr, old, new, TextInputList[6]))
+TextInputList[7].on_change("value", lambda attr, old, new: update(attr, old, new, TextInputList[7]))
+TextInputList[8].on_change("value", lambda attr, old, new: update(attr, old, new, TextInputList[8]))
+TextInputList[9].on_change("value", lambda attr, old, new: update(attr, old, new, TextInputList[9]))
+
+
+
 
 # Add the plot to the current document
 Text_Input_Column = column([TextInputList[i] for i in range(10)])
