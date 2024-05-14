@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-from bokeh.models import BoxAnnotation, FactorRange, TextInput
+from bokeh.models import BoxAnnotation, FactorRange, TextInput, AutocompleteInput
 from bokeh.plotting import figure, show
 from bokeh.transform import factor_cmap
 from bokeh.palettes import Spectral4
@@ -29,16 +29,18 @@ from bokeh.layouts import row
 # df = pd.DataFrame(data)
 
 # Reshape the DataFrame
-df_melted = pd.read_csv('./BokehPlot/df_plot.txt', sep='\t')
+df_melted = pd.read_csv('./BokehAstrocytesProteomics/df_plot.txt', sep='\t')
 df_melted.drop(['Category_Num'], axis=1, inplace=True)
 df_melted.rename(columns={'Categories': 'Gene'}, inplace=True)
+
+gene_names = df_melted['Gene'].unique().tolist()
 
 
 GenesToPlot = np.unique(df_melted.Gene)[0:10]
 df_melted_plot = df_melted[df_melted.Gene.isin(GenesToPlot)]
 
 # Create a text input widget
-text_input = TextInput(value="default", title="Enter gene:")
+text_input = AutocompleteInput(completions=gene_names, value="default", title="Enter gene:")
 
 # Create a list of series names (will be used for the legend)
 series_names = df_melted_plot['Series'].unique().tolist()
