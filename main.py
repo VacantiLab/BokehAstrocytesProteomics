@@ -17,19 +17,6 @@ from bokeh.layouts import row, column
 
 from copy import copy
 
-# Define the data
-# Define the data
-# data = {
-#     'Gene': np.repeat(['Gene1', 'Gene2', 'Gene3', 'Gene4', 'Gene5'], 4),
-#     'veh': np.random.randint(0, 11, size=20),
-#     'oAB': np.random.randint(0, 11, size=20),
-#     'gsk': np.random.randint(0, 11, size=20),
-#     'oAB-gsk': np.random.randint(0, 11, size=20)
-# }
-
-# # Create the DataFrame
-# df = pd.DataFrame(data)
-
 # Reshape the DataFrame
 df_melted = pd.read_csv('./BokehAstrocytesProteomics/df_plot.txt', sep='\t')
 df_melted.drop(['Category_Num'], axis=1, inplace=True)
