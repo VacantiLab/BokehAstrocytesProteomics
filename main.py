@@ -13,7 +13,7 @@ from bokeh.io import curdoc
 
 from bokeh.models import Legend
 
-from bokeh.layouts import row
+from bokeh.layouts import row, column
 
 # Define the data
 # Define the data
@@ -40,7 +40,8 @@ GenesToPlot = np.unique(df_melted.Gene)[0:10]
 df_melted_plot = df_melted[df_melted.Gene.isin(GenesToPlot)]
 
 # Create a text input widget
-text_input = AutocompleteInput(completions=gene_names, value="default", title="Enter gene:")
+TextInputList = [AutocompleteInput(completions=gene_names, value=GenesToPlot[i], title="Enter gene:",name=str(i)) for i in range(10)]
+#text_input = AutocompleteInput(completions=gene_names, value="default", title="Enter gene:")
 
 # Create a list of series names (will be used for the legend)
 series_names = df_melted_plot['Series'].unique().tolist()
@@ -147,8 +148,10 @@ def update(attr, old, new):
 
 
 
-text_input.on_change("value", update)
+#text_input.on_change("value", update)
+[TextInputList[i].on_change("value", update) for i in range(10)]
 
 # Add the plot to the current document
-layout = row(p, text_input)
+Text_Input_Column = column([TextInputList[i] for i in range(10)])
+layout = row(p, Text_Input_Column)
 curdoc().add_root(layout)
