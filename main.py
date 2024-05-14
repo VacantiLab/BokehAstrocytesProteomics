@@ -104,16 +104,16 @@ p.add_layout(legend, 'right')
 def update(attr, old, new, widget):
     # Update GenesToPlot
 
-    
     widget_name = widget.name
-    print(widget_name)
 
     GenesToPlot[int(widget_name)] = new
-    df_melted_plot = df_melted[df_melted.Gene.isin(GenesToPlot)]
 
+    Data = copy(df_melted)
+    df_melted_plot = df_melted[Data.Gene.isin(GenesToPlot)]
 
     order = GenesToPlot
     order_dict = {value: i for i, value in enumerate(order)}
+    df_melted_plot = df_melted_plot.copy()
     df_melted_plot['gene_sort_column'] = df_melted_plot['Gene'].map(order_dict)
 
     SeriesList = ['veh', 'oAB', 'gsk', 'oAB-gsk']
@@ -124,14 +124,14 @@ def update(attr, old, new, widget):
     df_melted_plot.sort_values(['gene_sort_column','series_sort_column'],inplace=True)
     df_melted_plot.drop(['gene_sort_column', 'series_sort_column'], axis=1, inplace=True)
 
-    #series_names = df_melted['Series'].unique().tolist()
-    series_names = ['veh', 'oAB', 'gsk', 'oAB-gsk']
 
     factors = df_melted_plot[['Gene', 'Series']].drop_duplicates().values.tolist()
     factors = [tuple(x) for x in factors]
     p.x_range.factors = factors
 
-    for i, series_name in enumerate(series_names):
+    print(factors)
+
+    for i, series_name in enumerate(SeriesList):
         df_filtered = df_melted_plot[df_melted_plot['Series'] == series_name]
     
         # Create a ColumnDataSource that contains the data for the circles
@@ -153,8 +153,6 @@ def update(attr, old, new, widget):
             upper=means + stds
         )
 
-        p.x_range = FactorRange(*factors)
-
 
 
 #text_input.on_change("value", update)
@@ -169,8 +167,6 @@ TextInputList[6].on_change("value", lambda attr, old, new: update(attr, old, new
 TextInputList[7].on_change("value", lambda attr, old, new: update(attr, old, new, TextInputList[7]))
 TextInputList[8].on_change("value", lambda attr, old, new: update(attr, old, new, TextInputList[8]))
 TextInputList[9].on_change("value", lambda attr, old, new: update(attr, old, new, TextInputList[9]))
-
-
 
 
 # Add the plot to the current document
