@@ -116,13 +116,29 @@ p.add_layout(legend, 'right')
 # Define a callback function that updates the plot
 def update(attr, old, new, widget):
     # Update GenesToPlot
+
     
     widget_name = widget.name
     print(widget_name)
 
     GenesToPlot[int(widget_name)] = new
     df_melted_plot = df_melted[df_melted.Gene.isin(GenesToPlot)]
-    series_names = df_melted['Series'].unique().tolist()
+
+
+    order = GenesToPlot
+    order_dict = {value: i for i, value in enumerate(order)}
+    df_melted_plot['gene_sort_column'] = df_melted_plot['Gene'].map(order_dict)
+
+    SeriesList = ['veh', 'oAB', 'gsk', 'oAB-gsk']
+    order = SeriesList
+    order_dict = {value: i for i, value in enumerate(order)}
+    df_melted_plot['series_sort_column'] = df_melted_plot['Series'].map(order_dict)
+    
+    df_melted_plot.sort_values(['gene_sort_column','series_sort_column'],inplace=True)
+    df_melted_plot.drop(['gene_sort_column', 'series_sort_column'], axis=1, inplace=True)
+
+    #series_names = df_melted['Series'].unique().tolist()
+    series_names = ['veh', 'oAB', 'gsk', 'oAB-gsk']
 
     factors = df_melted_plot[['Gene', 'Series']].drop_duplicates().values.tolist()
     factors = [tuple(x) for x in factors]
